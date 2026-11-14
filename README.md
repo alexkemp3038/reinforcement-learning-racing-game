@@ -34,3 +34,7 @@ To pass the values of the cars distance to the wall to the model for it to train
 <H2>Making Neural Network Skeleton</H2>
 <img width="1207" height="987" alt="image" src="https://github.com/user-attachments/assets/0764197d-982f-4dfd-a380-9e3982853f00" />
 Created a seperate file for the network, with two objects: NeuralNetwork and Level. Every NeuralNetwork has a list of levels. Each level is made up of inputs, outputs, biases and weights. feedForwards passes inputs through a process and gives each value to the mapped output. In this case, all inputs are times by its weight, then summed together. This is then compared to its bias, which is the threshold for whether the neuron should turn on or off. If the sum is greater than its bias the output is turned on (set to 1), otherwise its turned off (set to 0).
+
+<H2>Mapping outputs to controls</H2>
+<img width="1840" height="842" alt="image" src="https://github.com/user-attachments/assets/35c66fa2-4c76-4799-8974-c0a630fb99a4" />
+I then mapped these outputs to a newly created move_ai function which can now move the cars by itself. I then added a generate_cars(n) function that generates n amount of cars and the game loop has been altered to handle multiple cars. Once a car touches a border, the car is classified as dead (alive = false) and it can no longer move. To minimise visual clutter, I also added a feature where dead cars change transparency level.
