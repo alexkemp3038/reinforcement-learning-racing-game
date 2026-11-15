@@ -46,3 +46,17 @@ To save the best cars and mutate them, we need to define "best" and decide which
 - Time alive - This only considers the alive state and doesnt actually consider progess within the race track.
 - Lap time - Can be used to optimise lap time but wont help in early training as cars will not finish at first, may come back to this later..
 - Checkpoints - This is the method I decided to use. It created checkpoints along the track and each car will keep track of each checkpoint it gets past.
+
+<H2>Step 5: Implementing a save and load feature</H2>
+<img width="637" height="551" alt="image" src="https://github.com/user-attachments/assets/1bd77e8f-6ce9-4d05-9d54-085e4c6f3224" />
+To save the champion car, we need to save the best car object into a file and be able to load it back into memory. This can be done with three different ways in Python:
+- JSON - Best for readable, secure objects. However, it doesnt support python objects, functions or NumPy Arrays (natively).
+- NPZ - Best for ML datasets and numbers in a compressed format. However, its primarily used for NumPy ecosystem, not for rgeneral objects.
+- Pickle - Great python supported file type for converts any Python Object into a byte stream. However, it isnt very secure, its only for python and mismatched versions is a common issue. It will also crash if something is changed in the object class and then it tries to be loaded.
+
+After weighing all the pros and cons, I decided to go with Pickle. This is the easiest of the three to implement and security isn't a concern as it does not store confidential data and is a locally sourced project. The last issue is a concern, but shouldn't be an issue in the final version as it will be fully complete and the car class shouldn't be altered if its fully working.  
+
+It only saves the brain as we want the car to begin at the beginning when the car is loaded and the brain stores the part we care about - the best brain out of all the cars.
+
+<H2>Step 6: Putting it all together</H2>
+
