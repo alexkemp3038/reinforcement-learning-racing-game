@@ -31,10 +31,18 @@ As my old map had rugged track borders, I decided to change it to something with
 <img width="1570" height="1101" alt="image" src="https://github.com/user-attachments/assets/0105b3cd-f07a-4201-9651-9b8ecc7715f8" />
 To pass the values of the cars distance to the wall to the model for it to train steering I decided to use raycasting as its an effective method for a task like this with little performance overhead, meaning training wont take as long. I made a separate file for a sensor class, which is a sensor that sends out rays from the center of the car and uses angle dependant bounding box calculations combined with raycasting to determine the value from each ray to the track border, which is stored as a value between 0.0 and 1.0. It ranges from touching the wall (0.0), to the ray not detecting anything within its full maximum length (1.0).
 
-<H2>Making Neural Network Skeleton</H2>
+<H2>Step 2: Making Neural Network Skeleton</H2>
 <img width="1207" height="987" alt="image" src="https://github.com/user-attachments/assets/0764197d-982f-4dfd-a380-9e3982853f00" />
 Created a seperate file for the network, with two objects: NeuralNetwork and Level. Every NeuralNetwork has a list of levels. Each level is made up of inputs, outputs, biases and weights. feedForwards passes inputs through a process and gives each value to the mapped output. In this case, all inputs are times by its weight, then summed together. This is then compared to its bias, which is the threshold for whether the neuron should turn on or off. If the sum is greater than its bias the output is turned on (set to 1), otherwise its turned off (set to 0).
 
-<H2>Mapping outputs to controls</H2>
+<H2>Step 3: Mapping outputs to controls</H2>
 <img width="1840" height="842" alt="image" src="https://github.com/user-attachments/assets/35c66fa2-4c76-4799-8974-c0a630fb99a4" />
 I then mapped these outputs to a newly created move_ai function which can now move the cars by itself. I then added a generate_cars(n) function that generates n amount of cars and the game loop has been altered to handle multiple cars. Once a car touches a border, the car is classified as dead (alive = false) and it can no longer move. To minimise visual clutter, I also added a feature where dead cars change transparency level.
+
+<H2>Step 4: Deciding how to reward the agent</H2>
+<img width="1560" height="782" alt="image" src="https://github.com/user-attachments/assets/ca2fd67c-cd2d-449a-b85b-886b4d567315" />
+To save the best cars and mutate them, we need to define "best" and decide which car to save. To do this we need to reward the car for doing a correct action and the car with the most correct actions will be decided as the "best". Here are all the reward systems i considered and why I did/didn't pick it:
+- Distance driven - This can work but cars the drive in circles or wiggling forward and back can be considered the best.
+- Time alive - This only considers the alive state and doesnt actually consider progess within the race track.
+- Lap time - Can be used to optimise lap time but wont help in early training as cars will not finish at first, may come back to this later..
+- Checkpoints - This is the method I decided to use. It created checkpoints along the track and each car will keep track of each checkpoint it gets past.
