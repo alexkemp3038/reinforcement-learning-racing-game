@@ -1,8 +1,6 @@
 import math
 import pygame
-
-def lerp(a, b, t):
-    return a + (b - a) * t
+import utils as u
 
 class Sensor:
     def __init__(self, car):
@@ -30,8 +28,8 @@ class Sensor:
         self.draw_points = []
 
         # Find centre point of car (Want rays to come out the center)
-        half_width = self.car.IMG.get_width() / 2
-        half_height = self.car.IMG.get_height() / 2
+        half_width = self.car.image.get_width() / 2
+        half_height = self.car.image.get_height() / 2
         cx, cy = self.car.x + half_width, self.car.y + half_height
 
         # Converts angle to radians
@@ -42,7 +40,7 @@ class Sensor:
         # Loops through every ray
         for i in range(self.ray_count):
             # Figures out angle of this ray relative to car
-            rel = lerp(self.ray_spread / 2, -self.ray_spread / 2, i / (self.ray_count - 1))
+            rel = u.lerp(self.ray_spread / 2, -self.ray_spread / 2, i / (self.ray_count - 1))
             # Adds angle with angle so its facing correct direction
             angle = rel + car_angle
             # How much the code should move by x and y when going pixel-by-pixel each ray.
