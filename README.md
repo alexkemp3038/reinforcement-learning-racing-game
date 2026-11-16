@@ -1,7 +1,21 @@
 # reinforcement-learning-racing-game
+<H1>Repository Structure</H1>
+'racing_game.py' is the main file structure connecting components together and has the main game loop. This is the file that should be ran.
+'utils.py' has functions that is used in the main file, but is put in here for readability. The lerp() function is also used in other files.
+'car.py' is the file containing the AbstractCar class and its methods.
+'checkpoint.py'
+  
 <H1>How to run</H1>
-Still work in progress
-
+<H2>VSCode</H2>
+1. Open the 'racing_game.py' file in your VSCode application.<br>
+2. Make sure that python is installed on your computer. This can be done by clicking the 3 lines on the top left -> Terminal -> New Terminal -> and typing 'python --version'. If it does not pop up with a python version, you need to install python.<br>
+3. Click 'run python file' on the top right, or right click anywhere in the file and click 'Run Python File'.<br>
+4. If its your first time running it, the program should run after step 3. If a champion car file is generated after you've already ran it, follow the instructions prompted in the terminal.<br>
+<br>
+<H2>Command Prompt</H2>
+1. Navigate to the directory 'racing_game.py' is in by using the 'cd ' command. To check if you are in the correct directory, type 'ls' and it should show its name.<br>
+2. Type and enter 'python racing_game.py' in the terminal to run the program.<br>
+3. If its your first time running it, the program should run after step 3. If a champion car file is generated after you've already ran it, follow the instructions prompted in the terminal.<br><br>
 <H1>Making The Game</H1>
 <H2>Step 1: Make an easy testing map</H2>
 <img width="1762" height="1030" alt="image" src="https://github.com/user-attachments/assets/3f0cf0e6-5655-4c91-86f1-74e4f348cb10" />
