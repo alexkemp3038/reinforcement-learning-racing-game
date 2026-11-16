@@ -1,10 +1,36 @@
 # reinforcement-learning-racing-game
 <H1>Repository Structure</H1>
-'racing_game.py' is the main file structure connecting components together and has the main game loop. This is the file that should be ran.
-'utils.py' has functions that is used in the main file, but is put in here for readability. The lerp() function is also used in other files.
-'car.py' is the file containing the AbstractCar class and its methods.
-'checkpoint.py'
-  
+'racing_game.py' is the main file structure connecting components together and has the main game loop.This is the file that should be ran.<br>
+'utils.py' has functions that is used in the main file, but is put in here for readability. The lerp() function is also used in other files.<br>
+'car.py' is the file containing the AbstractCar class and its methods.<br>
+'checkpoint.py' is the file containing the checkpoint class.<br>
+'network.py' is the file containing the NeuralNetwork and Level classes. This is the main structure of the network allowing the model to learn.<br>
+'sensor.py' is the file containing the Sensor class. This is used for ray casting values as inputs.<br>
+
+<br>
+<H1>Overview of the Logic</H1>
+<H2>The Game</H2>
+The map itself was made by combining assets found online.<br>
+The game uses 'test_map_border_png' as a mask which is compared to the car hitbox to check for collisions.<br>
+Car rotation is calculated using trigonometry to find where it should go diagonally.<br>
+The cars speed, rotational speed and acceleration can be configured by changing MAX_SPEED, MAX_ROT_SPEED and ACCELERATION respectively.<br>
+Each car has a defined sensor using the Sensor object, which uses raycasting to store a list of 9 values between 0 and 1 to represent how close that ray is to a wall.<br>
+
+<H2>The Training Model</H2>
+The neural network is made by defining a NeuralNetwork class which is made up of a list of Levels, with the first one in the list being the input layer and the last being the output layer.<br>
+The network uses neuroevolution and mutation to get better.<br>
+Neuroevolution is used by creating a defined number of cars, all with random brains, and selecting the best performing cars and variating them with the goal of improving them. Variation is done by mutation, this slightly tweaks the values of each brain with the goal of improving them. <br>
+Every level object is essentially a pair of layers, as every level has a list of inputs(current layer) and outputs(next layer). It also has a list of biases and weights, which are initially randomised. <br>
+The amount of neurons in the input layer is the amount of values stored in the sensor, by default this is 9.<br>
+The amount of neurons in the output layer is 4, with each representing forward, backward, left and right respectively.<br>
+By default, 1 hidden layer is defined, with 20 neurons.<br>
+Running inputs through the network is done using the feedForward method in the NeuralNetwork class, where its feeds forward (runs values and calcuations through) every Level.<br> 
+It is a fully connected network, where every connection is multiplied by its weight, they are then all summed up and compared to its bias. This is then ran through the tanh activation function, which is used to ensure smooth steering and to keep values close together and ensure non-linearity. If its the output layer and its greater than its bias, its considered important enough, and turned on. Otherwise, its turned off.<br>
+To avoid overfitting: INITIAL_MUTATION (25% by default) is the mutation level used for generations 1-14 and 36-49, and REFINING_MUTATION (%5 by default) is used for generations 15-35 and over 50. This is done to ensure the model can handle randomness and allow for more obscure variations with the hope of them being faster, and then improving them with a more refined value.<br>
+
+<H2>Average Case Example</H2>
+For the first 1 or 2 generations, none of the cars might be able to even make the first turn. This is okay as they are randomised until a car reaches the first checkpoint (around the corner). Once a car reaches the first checkpoint, it is then saved as the champion car. Any cars that finish with the same number of checkpoints, will then be saved based on whoever reached the last checkpoint the fastest. The highest score is 17 as this is the number of checkpoints. The cars that will now spawn each generation will be a slightly altered version of the champion car, with more random and less random variations depending on what number of generation it is (25% for generations 1-14 and 36-49, and 5% for generations 15-35 and over 50). Once a car finishes the track, the best time will be updated and the time should get better the more they train.<br>
+
 <H1>How to run</H1>
 <H2>VSCode</H2>
 1. Open the 'racing_game.py' file in your VSCode application.<br>
@@ -73,4 +99,21 @@ After weighing all the pros and cons, I decided to go with Pickle. This is the e
 It only saves the brain as we want the car to begin at the beginning when the car is loaded and the brain stores the part we care about - the best brain out of all the cars.
 
 <H2>Step 6: Putting it all together</H2>
+<img width="997" height="952" alt="image" src="https://github.com/user-attachments/assets/56d3b787-b6d9-4ce8-b998-c1934318b0d7" />
+Firstly, I created an HUD which displays generation number, times and scores. I also made a function that changes the mutation level based on what generation it is, to avoid overfitting (please read "The training model" for more info. on this).<br>
+
+<img width="1197" height="815" alt="image" src="https://github.com/user-attachments/assets/7526d159-75ce-41aa-a9bc-c4ebfb95c5f9" />
+I then added a user prompt in the terminal so the user can switch from restarting training, watching the best car in the champion car file or continue training the champion car.
+
+<img width="1187" height="575" alt="image" src="https://github.com/user-attachments/assets/004a81d4-a91f-45d7-94eb-e11299062873" />
+I had to update the way the cars are generated based on what the user prompts.
+
+<img width="1177" height="252" alt="image" src="https://github.com/user-attachments/assets/b036453b-c11e-4b5e-8bd3-18c47b67ee07" />
+Here I added a feature where the user can press the space bar, this ends training and goes into the mode for watching the champion car race by itself.
+
+<img width="1207" height="822" alt="image" src="https://github.com/user-attachments/assets/1017236b-9118-4d9d-835b-6b5393c26fbf" />
+<img width="1202" height="567" alt="image" src="https://github.com/user-attachments/assets/54fd94b7-6ee3-4480-926b-f7897129183f" />
+This is main logic handling how new generations are handled and saved. A generation is over once either a timeout occurs, a car finished a lap or all cars are declared dead. Once a generation is over, a champion is set if there is a new one. The second image is for handling the visual for watching the champion car (endlessly drives around the track and is reset to start position each time).
+
+
 
